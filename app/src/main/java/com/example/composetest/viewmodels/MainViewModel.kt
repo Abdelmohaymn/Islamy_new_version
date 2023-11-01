@@ -6,7 +6,6 @@ import com.example.composetest.repositories.MainRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 
 abstract class MainViewModel <T>(initialValue:T): ViewModel() {
@@ -14,10 +13,14 @@ abstract class MainViewModel <T>(initialValue:T): ViewModel() {
     protected abstract var repository:MainRepository<T>
     protected abstract var INDEX_GAME:String
 
-    abstract fun checkIsCorrect(answer:String)
-
     private val __state = MutableStateFlow(initialValue)
     val state = __state.asStateFlow()
+
+    protected val __isSelectedArray:Array<MutableStateFlow<Int>> = Array(10) {MutableStateFlow(-1)}
+    val isSelected = __isSelectedArray.map { it.asStateFlow() }
+
+    protected val __isClickableArray:Array<MutableStateFlow<Boolean>> = Array(10) {MutableStateFlow(true)}
+    val isClickable = __isClickableArray.map { it.asStateFlow() }
 
     private var index:Int=0
     private val questions : MutableList<T> = mutableListOf()
@@ -33,15 +36,7 @@ abstract class MainViewModel <T>(initialValue:T): ViewModel() {
             val job2 = async { repository.getInteger(INDEX_GAME) }
             val list:ArrayList<T> = job1.await()
             questions.addAll(list)
-            index = job2.await()!!
-            __state.value = questions[index]
-        }
-    }
-
-     private fun getGameIndex(){
-        viewModelScope.launch {
-            val job = async { repository.getInteger(INDEX_GAME)}
-            index = job.await()!!
+            index = job2.await()?:0
             __state.value = questions[index]
         }
     }
@@ -54,8 +49,8 @@ abstract class MainViewModel <T>(initialValue:T): ViewModel() {
 
      open fun nextQuestion(){
         index++
-        __state.value = questions[index]
         setGameIndex()
+        __state.value = questions[index]
     }
 
 }

@@ -50,7 +50,7 @@ abstract class MainRepository <T>: DataPreferences{
     override suspend fun getInteger(key: String): Int? {
         val preferencesKey = intPreferencesKey(key)
         val preferences = context.dataStore.data.first()
-        return preferences[preferencesKey]?:0
+        return preferences[preferencesKey]
     }
 
     override suspend fun putBoolean(key: String, value: Boolean) {
@@ -63,7 +63,7 @@ abstract class MainRepository <T>: DataPreferences{
     override suspend fun getBoolean(key: String): Boolean? {
         val preferencesKey = booleanPreferencesKey(key)
         val preferences = context.dataStore.data.first()
-        return preferences[preferencesKey]?:false
+        return preferences[preferencesKey]
     }
 
 }

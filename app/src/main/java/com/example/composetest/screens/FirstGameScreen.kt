@@ -30,13 +30,11 @@ fun FirstGameScreen(
     viewModel:FirstViewModel = hiltViewModel()
 ){
     val state by viewModel.state.collectAsState()
-    val isCorrect by viewModel.correctState.collectAsState()
     val animationStart by viewModel.animationStart.collectAsState()
 
     s=state
     firstScreen(
         state,
-        isCorrect,
         animationStart,
         viewModel.animationArray,
         viewModel.isSelected,
@@ -52,10 +50,9 @@ fun FirstGameScreen(
 @Composable
 private fun firstScreen(
     state:FirstGame,
-    isCorrect:Int,
     animationState:Int,
     animationArray:List<StateFlow<Boolean>>,
-    isSelected:List<StateFlow<Boolean>>,
+    isSelected:List<StateFlow<Int>>,
     isClickable:List<StateFlow<Boolean>>,
     onClick:(Int)->Unit,
     nextQues:()->Unit,
@@ -89,7 +86,7 @@ private fun firstScreen(
                 ){
                     ButtonChoice(
                         onClick = onClick, text = state.choices[i],
-                        correct = isCorrect ,selected = selectedState, index = i,
+                        selected = selectedState, index = i,
                         animationStart = animationState,animate = animate,
                         changeAnimationState = changeAnimationState,
                         changeAnimationArray = changeAnimationArray,

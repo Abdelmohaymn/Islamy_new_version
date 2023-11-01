@@ -6,36 +6,26 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun ButtonChoice(
     text:String,
     index:Int,
-    correct:Int,
     animationStart:Int,
-    selected:Boolean,
+    selected:Int,
     clickable:Boolean,
     animate:Boolean,
     onClick:(Int)->Unit,
@@ -46,7 +36,7 @@ fun ButtonChoice(
 ){
 
     val backgroundColor by animateColorAsState(
-        targetValue = updateColor(selected,correct,index),
+        targetValue = updateColor(selected),
         tween(500),
         label = "",
     )
@@ -71,7 +61,7 @@ fun ButtonChoice(
             )
         }
     }
-    if(selected && correct==index){
+    if(selected==1){
         LaunchedEffect(key1 = true){
             unClickable()
             changeAnimationState(0)
@@ -86,9 +76,9 @@ fun ButtonChoice(
     }
 }
 
-private fun updateColor(selected:Boolean,correct: Int,index: Int):Color{
-    return if (selected){
-        if(correct==index){
+fun updateColor(selected:Int):Color{
+    return if (selected!=-1){
+        if(selected==1){
             Color.Green
         }else{
             Color.Red

@@ -33,8 +33,6 @@ class FirstRepository @Inject constructor(
                 }
             }
         }
-        //val jsonArray: JSONArray? = getJsonArrayFromFile(Constants.FIRST_GAME)
-
         return questions
     }
 }
